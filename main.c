@@ -20,13 +20,18 @@ void da_print_info(HeheDynamicArray* da)
 int main(void)
 {   
     HeheDynamicArray da = {0}; 
+    int amount = 100;
+
 
     da_print_info(&da);
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < amount; i++) {
         hehe_da_append(&da, i);
     }
-
+    
+    for (int i = 0; i < amount; i++) {
+        printf("%d\n", da.items[i]);
+    }
     
     da_print_info(&da);
     

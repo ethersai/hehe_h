@@ -20,38 +20,34 @@
 #endif /* HEHE_DA_REALLOC */
 
 // TODO
-#define hehe_da_grow(hda, needs)                        \
-     do {                                               \
-         void* tmp = NULL;                              \
-         if ((hda)->capacity == 0) {                    \
-             (hda)->capacity = HEHE_DA_INIT_CAP         \
-         }                                              \
-         while ((hda)->capacity < )                     \
-                                                        \
-     } while (0)                                        \
+#define hehe_da_grow(hda, needs)                                                \
+     do {                                                                       \
+         void* tmp = NULL;                                                      \
+         if ((hda)->capacity == 0) {                                            \
+             (hda)->capacity = HEHE_DA_INIT_CAP;                                \
+         }                                                                      \
+         while ((hda)->capacity < (hda)->count + needs) {                       \
+             (hda)->capacity *= 2;                                              \
+         }                                                                      \
+         tmp = HEHE_DA_REALLOC((hda)->items, (hda)->capacity * sizeof(*(hda)->items));  \
+         HEHE_DA_ASSERT(tmp && "HEHE GROW FAILED!");                            \
+         (hda)->items = tmp;                                                    \
+     } while (0)                                                                \
 
 #define hehe_da_append(hda, item)                                                      \
     do {                                                                               \
         if ((hda)->capacity < (hda)->count + 1) {                                      \
-            void* tmp = NULL;                                                          \
-            if ((hda)->capacity == 0) {                                                \
-                (hda)->capacity = HEHE_DA_INIT_CAP;                                    \
-            } else {                                                                   \
-                (hda)->capacity *= 2;                                                  \
-            }                                                                          \
-            tmp = realloc((hda)->items, (hda)->capacity * sizeof(*(hda)->items));      \
-            HEHE_DA_ASSERT(tmp && "HEHE realloc failed!");                             \
-            (hda)->items = tmp;                                                        \
+            hehe_da_grow((hda), ((hda)->count + 1));                                    \
         }                                                                              \
-        (hda)->items[(hda)->count++] = (item);                                           \
+        (hda)->items[(hda)->count++] = (item);                                         \
     } while (0)                                                                        \
 
 #define hehe_da_append_many(hda, item, amount)                   \
     do {                                                         \
-        if ((hda)->capacity < (hda)->count + amount) {            \
-                                                                  \
+        if ((hda)->capacity < (hda)->count + amount) {           \
+            hehe_da_grow((hda), ((hda)->count + amount))         \
         }                                                        \
-                                                                 \
+                                                                         \
     } while (0)                                                  \
 
 
