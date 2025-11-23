@@ -1,0 +1,45 @@
+AI suggestions.
+
+Core operations:
+
+    init - Initialize a new dynamic array
+    free - Deallocate the array and reset fields
+
+    clear - Remove all elements but keep capacity
+    reserve - Pre-allocate capacity to avoid multiple reallocations
+
+Access:
+
+    get - Get element at index (with bounds checking)
+    set - Set element at index (with bounds checking)
+    pop - Remove and return last element
+    remove_at - Remove element at specific index (shifts elements)
+
+Insertion:
+
+    insert_at - Insert element at specific index (shifts elements)
+    prepend - Add element to the beginning
+
+Bulk operations:
+
+    append_many - Add multiple elements at once
+    extend - Append another dynamic array to this one
+    copy - Create a deep copy of the array
+
+Search & manipulation:
+
+    find - Search for element (returns index or -1)
+    contains - Check if element exists
+    reverse - Reverse the order of elements
+    swap - Swap two elements by index
+
+Memory optimization:
+
+    shrink_to_fit - Reduce capacity to match count
+    resize - Change count and adjust capacity if needed
+
+Iteration helpers:
+
+    for_each - Apply function to each element
+    map - Transform elements using a function
+    filter - Create new array with elements matching predicate
