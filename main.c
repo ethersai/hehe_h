@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define HEHE_DA_INIT_CAP 1
 #include "hehe.h"
 
 typedef struct {
@@ -22,7 +21,6 @@ int main(void)
     HeheDynamicArray da = {0}; 
     int amount = 100;
 
-
     da_print_info(&da);
 
     for (int i = 0; i < amount; i++) {
@@ -34,7 +32,26 @@ int main(void)
     }
     
     da_print_info(&da);
-    
+   
+    int* data = calloc(300, sizeof(int));
+
+    hehe_da_append_many(&da, data, 300);
+
+    int c = 0;
+    for (int i = 0; i < da.count; i++) {
+        printf("%d\n", da.items[i]);
+        if (da.items[i] == 0) {
+            c++;
+        }
+    }
+
+    printf("[[[%d\n", c);
+    da_print_info(&da);
+
+    hehe_da_free(&da);
+    da_print_info(&da);
+
+
 
     return 0;
 }

@@ -1,6 +1,9 @@
 #ifndef HEHE_DA_H_
 #define HEHE_DA_H_
 
+#include <stdlib.h>
+#include <string.h>
+
 #ifndef HEHE_DA_INIT_CAP
 #define HEHE_DA_INIT_CAP 256
 #endif /* HEHE_DA_INIT_CAP */
@@ -15,11 +18,11 @@
 #endif /* HEHE_DA_ASSRT */
 
 #ifndef HEHE_DA_REALLOC
-#include <stdlib.h>
 #define HEHE_DA_REALLOC realloc
 #endif /* HEHE_DA_REALLOC */
 
-// TODO
+// TODO PERMA ASSERT
+
 #define hehe_da_grow(hda, needs)                                                \
      do {                                                                       \
          void* tmp = NULL;                                                      \
@@ -37,19 +40,29 @@
 #define hehe_da_append(hda, item)                                                      \
     do {                                                                               \
         if ((hda)->capacity < (hda)->count + 1) {                                      \
-            hehe_da_grow((hda), ((hda)->count + 1));                                    \
+            hehe_da_grow((hda), 1);                                                    \
         }                                                                              \
         (hda)->items[(hda)->count++] = (item);                                         \
     } while (0)                                                                        \
 
-#define hehe_da_append_many(hda, item, amount)                   \
-    do {                                                         \
-        if ((hda)->capacity < (hda)->count + amount) {           \
-            hehe_da_grow((hda), ((hda)->count + amount))         \
-        }                                                        \
-                                                                         \
-    } while (0)                                                  \
+#define hehe_da_append_many(hda, item, amount)                                                 \
+    do {                                                                                       \
+        if ((hda)->capacity < (hda)->count + (amount)) {                                       \
+            hehe_da_grow((hda), (amount));                                                     \
+        }                                                                                      \
+        memcpy(&((hda)->items[(hda)->count]), (item), sizeof(*(hda)->items) * (amount));      \
+        (hda)->count += (amount);                                                              \
+    } while (0)                                                                                \
 
+#define hehe_da_free(hda)                                                   \
+    do {                                                                    \
+        if ((hda)) {                                                        \
+            free((hda)->items);                                             \
+            (hda)->items = NULL;                                            \
+            (hda)->count = 0;                                               \
+            (hda)->capacity = 0;                                            \
+        }                                                                   \
+    } while (0)                                                             \
 
 #ifdef HEHE_DA_IMPLEMENTATION
 
