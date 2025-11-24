@@ -20,6 +20,8 @@ int main(void)
 {   
     HeheDynamicArray da = {0}; 
     int amount = 100;
+    
+    hehe_da_reserve(&da, 69);
 
     da_print_info(&da);
 

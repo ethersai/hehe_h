@@ -1,3 +1,18 @@
+/*
+ * HEHE_DA_H - Dynamic Array Implementation
+ * 
+ * Usage:
+ *   typedef struct {
+ *       int *items;
+ *       size_t count;
+ *       size_t capacity;
+ *   } IntArray;
+ *   
+ *   IntArray arr = {0};
+ *   hehe_da_append(&arr, 42);
+ *   hehe_da_free(&arr);
+ */
+
 #ifndef HEHE_DA_H_
 #define HEHE_DA_H_
 
@@ -21,8 +36,11 @@
 #define HEHE_DA_REALLOC realloc
 #endif /* HEHE_DA_REALLOC */
 
-// TODO PERMA ASSERT
+// TODO 
+// PERMA ASSERT
 
+// NOTE
+// grow updates capacity but later can fail.
 #define hehe_da_grow(hda, needs)                                                \
      do {                                                                       \
          void* tmp = NULL;                                                      \
@@ -50,9 +68,11 @@
         if ((hda)->capacity < (hda)->count + (amount)) {                                       \
             hehe_da_grow((hda), (amount));                                                     \
         }                                                                                      \
-        memcpy(&((hda)->items[(hda)->count]), (item), sizeof(*(hda)->items) * (amount));      \
+        memcpy(&((hda)->items[(hda)->count]), (item), sizeof(*(hda)->items) * (amount));       \
         (hda)->count += (amount);                                                              \
     } while (0)                                                                                \
+
+#define hehe_da_pop(hda) \
 
 #define hehe_da_free(hda)                                                   \
     do {                                                                    \
@@ -64,8 +84,25 @@
         }                                                                   \
     } while (0)                                                             \
 
-#ifdef HEHE_DA_IMPLEMENTATION
+#define hehe_da_clear(hda)  \
+    do {                    \
+        (hda)->count = 0;   \
+    } while (0)             \
 
+
+#define hehe_da_reserve(hda, cap)            \
+    do {                                     \
+        HEHE_DA_ASSERT((cap) > 0);           \
+        if (cap > (hda)->capacity) {         \
+            void* tmp = NULL;                \
+            tmp = HEHE_DA_REALLOC((hda)->items, cap * sizeof(*(hda)->items)); \
+            HEHE_DA_ASSERT(tmp && "HEHE_DA_REALLOC FAILED!"); \
+            (hda)->items = tmp;              \
+            (hda)->capacity = cap;           \
+        }                                    \
+    } while (0)                              \
+
+#ifdef HEHE_DA_IMPLEMENTATION
 #endif /* HEHE_DA_IMPLEMENTATION */
 
 #endif /* HEHE_DA_H_ */
