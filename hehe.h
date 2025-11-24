@@ -38,6 +38,7 @@
 
 // TODO 
 // PERMA ASSERT
+// SOME POTENTIAL OVERFLOW CHECKS FOR CAPACITY.
 
 // NOTE
 // grow updates capacity but later can fail.
@@ -72,8 +73,6 @@
         (hda)->count += (amount);                                                              \
     } while (0)                                                                                \
 
-#define hehe_da_pop(hda) \
-
 #define hehe_da_free(hda)                                                   \
     do {                                                                    \
         if ((hda)) {                                                        \
@@ -90,17 +89,16 @@
     } while (0)             \
 
 
-#define hehe_da_reserve(hda, cap)            \
-    do {                                     \
-        HEHE_DA_ASSERT((cap) > 0);           \
-        if (cap > (hda)->capacity) {         \
-            void* tmp = NULL;                \
-            tmp = HEHE_DA_REALLOC((hda)->items, cap * sizeof(*(hda)->items)); \
+#define hehe_da_reserve(hda, cap)              \
+    do {                                       \
+        if ((cap) > (hda)->capacity) {         \
+            void* tmp = NULL;                  \
+            tmp = HEHE_DA_REALLOC((hda)->items, (cap) * sizeof(*(hda)->items)); \
             HEHE_DA_ASSERT(tmp && "HEHE_DA_REALLOC FAILED!"); \
-            (hda)->items = tmp;              \
-            (hda)->capacity = cap;           \
-        }                                    \
-    } while (0)                              \
+            (hda)->items = tmp;                \
+            (hda)->capacity = (cap);           \
+        }                                      \
+    } while (0)                                \
 
 #ifdef HEHE_DA_IMPLEMENTATION
 #endif /* HEHE_DA_IMPLEMENTATION */
