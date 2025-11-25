@@ -30,7 +30,11 @@
 #ifndef HEHE_DA_ASSERT
 #include <assert.h>
 #define HEHE_DA_ASSERT assert
-#endif /* HEHE_DA_ASSRT */
+#endif /* HEHE_DA_ASSERT */
+
+#ifndef HEHE_DA_FREE
+#define HEHE_DA_FREE free
+#endif /* HEHE_DA_FREE */
 
 #ifndef HEHE_DA_REALLOC
 #define HEHE_DA_REALLOC realloc
@@ -76,7 +80,7 @@
 #define hehe_da_free(hda)                                                   \
     do {                                                                    \
         if ((hda)) {                                                        \
-            free((hda)->items);                                             \
+            HEHE_DA_FREE((hda)->items);                                             \
             (hda)->items = NULL;                                            \
             (hda)->count = 0;                                               \
             (hda)->capacity = 0;                                            \
