@@ -3,6 +3,12 @@
 
 #include "hehe.h"
 
+//Stack has a dynamic array inside
+//push() → add to end of array
+//pop() → remove from end of array
+//peek() → look at last element
+//All the growing/shrinking is handled by your existing array code
+//
 typedef struct {
     int*    items;
     size_t  count;
@@ -15,13 +21,35 @@ void da_print_info(HeheDynamicArray* da)
     printf("[ITEM COUNT: %zu]\n", da->count);
     printf("[DA CAPACITY: %zu]\n", da->capacity);
 }
-
+//    do {                                                            \
+        if ((hda)->count <= 0) {                                    \
+           pop_out = NULL;                                          \
+        } else {                                                    \
+           *pop_out = ((hda)->items[(hda)->count-1]);                 \
+           (hda)->count--;                                           \
+        }                                                            \
+ 
 int main(void)
 {   
     HeheDynamicArray da = {0}; 
+   
+    
+
+    hehe_da_append(&da, 10);
+    da_print_info(&da);
+
+    int x;
+    hehe_da_pop(&da, &x);
+    printf("%d", x);
+
+    da_print_info(&da);
+#if 0
     int amount = 100;
     
     hehe_da_reserve(&da, 69);
+    
+
+
 
     da_print_info(&da);
 
@@ -52,8 +80,7 @@ int main(void)
 
     hehe_da_free(&da);
     da_print_info(&da);
-
-
+#endif
 
     return 0;
 }

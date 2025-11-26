@@ -44,8 +44,7 @@
 // PERMA ASSERT
 // SOME POTENTIAL OVERFLOW CHECKS FOR CAPACITY.
 
-// NOTE
-// grow updates capacity but later can fail.
+// DYNAMIC ARRAY
 #define hehe_da_grow(hda, needs)                                                \
      do {                                                                       \
          void* tmp = NULL;                                                      \
@@ -67,6 +66,13 @@
         }                                                                              \
         (hda)->items[(hda)->count++] = (item);                                         \
     } while (0)                                                                        \
+
+#define hehe_da_pop(hda, pop_out)                                   \
+    do {                                                            \
+        if ((hda)->count > 0) {                                     \
+           *pop_out = ((hda)->items[--(hda)->count]);               \
+        }                                                           \
+    } while (0)                                                     \
 
 #define hehe_da_append_many(hda, item, amount)                                                 \
     do {                                                                                       \
@@ -103,6 +109,8 @@
             (hda)->capacity = (cap);           \
         }                                      \
     } while (0)                                \
+
+
 
 #ifdef HEHE_DA_IMPLEMENTATION
 #endif /* HEHE_DA_IMPLEMENTATION */
