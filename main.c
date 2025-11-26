@@ -28,7 +28,16 @@ void da_print_info(HeheDynamicArray* da)
            *pop_out = ((hda)->items[(hda)->count-1]);                 \
            (hda)->count--;                                           \
         }                                                            \
- 
+
+typedef struct {
+    int* items;
+    size_t head;     // index to dequeue from
+    size_t tail;     // index to enqueue to
+    size_t count;    // how many items
+    size_t capacity;
+} HeheQueue;
+
+
 int main(void)
 {   
     HeheDynamicArray da = {0}; 
