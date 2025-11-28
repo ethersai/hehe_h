@@ -261,4 +261,6 @@
 #endif/*defined(HEHE_GIVE_ALL) || defined(HEHE_GIVE_BITS)*/
 
 #endif /* HEHE_H_ */
+/****************************************/
 /* Written by ethersai - Public domain. */
+/****************************************/
