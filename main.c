@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "hehe.h"
 
@@ -33,6 +34,13 @@ void que_print_info(HeheQueue* qu)
     printf("[CAP: %zu]\n", qu->capacity);
 }
 
+// Any non-zero number to the power of 0 is 1.
+#define hehe_wisebit_set(value, n) do { } while (0)
+#define hehe_wisebit_toggle(value, n) do { } while (0) 
+#define hehe_wisebit_clear(value, n) do { } while (0)
+#define hehe_wisebit_read(value, n) do { } while (0)
+
+
 int main(void)
 {   
     HeheQueue que = {0};
@@ -53,6 +61,24 @@ int main(void)
 
     que_print_info(&que);
     
+    int neg = 10;
+    neg = ~neg ;
+    printf("%d\n", neg);
+    
+    int array[5] = {2, 2, 4, 5, 5};
+
+    int num = 0;
+    for (int i = 0; i < 5; i++) {
+        num ^= array[i];
+    }
+    printf("%d\n", num);
+    printf("%d\n", 145 >> 4);
+
+    putchar('\n');
+
+
+    
+
 
 #if 0
     HeheDynamicArray da = {0}; 

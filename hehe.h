@@ -72,7 +72,10 @@
 #endif /* HEHE_DA_MALLOC */
 
 // TODO 
-// SOME POTENTIAL OVERFLOW CHECKS FOR CAPACITY.
+// SOME POTENTIAL OVERFLOW CHECKS FOR CAPACITY IN DA.
+// ADD COMMON BITWISE OPERATION MACROS.
+// ADD TOGGLING WHAT YOU WANT TO INCLUDE #ifdef HEHE_DYNAMIC_ARRAY...
+// ADD STRING BUILDER, WILL BE COOL FOR BIT PRINTING!
 
 // DYNAMIC ARRAY
 #define hehe_da_grow(hda, needs)                                                \
@@ -184,5 +187,40 @@
 #define hehe_que_is_full(que)  ((que)->count == (que)->capacity)
 #define hehe_que_is_empty(que) ((que)->count == 0)
 #define hehe_que_size(que)     ((que)->count)
+
+// HEHE_BITS
+// BIG SHOUTOUT [https://www.andreinc.net/2023/02/01/demystifying-bitwise-ops]
+
+#define hehe_bits_print_uint8_t(num, out)            \
+    do {                                             \
+        for (int i = 7; i >= 0; i--) {               \
+            fprintf((out),"%d", (((num) >> i) & 1)); \
+        }                                            \
+    } while (0) 
+
+#define hehe_bits_print_uint16_t(num, out)           \
+    do {                                             \
+        for (int i = 15; i >= 0; i--) {              \
+            fprintf((out),"%d", (((num) >> i) & 1)); \
+        }                                            \
+    } while (0) 
+
+#define hehe_bits_print_uint32_t(num, out)           \
+    do {                                             \
+        for (int i = 31; i >= 0; i--) {              \
+            fprintf((out),"%d", (((num) >> i) & 1)); \
+        }                                            \
+    } while (0) 
+
+#define hehe_bits_print_uint64_t(num, out)           \
+    do {                                             \
+        for (int i = 63; i >= 0; i--) {              \
+            fprintf((out),"%d", (((num) >> i) & 1)); \
+        }                                            \
+    } while (0) 
+
+
+
+
 
 #endif /* HEHE_DA_H_ */
