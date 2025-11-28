@@ -1,5 +1,5 @@
 /*
- * HEHE_DA_H - Dynamic Array Implementation
+ * HEHE_DA - Dynamic Array Implementation
  * 
  * Usage:
  *   typedef struct {
@@ -37,12 +37,30 @@
  *   HEHE_DA_FREE(que.items);      // Free when done
  */
 
-#ifndef HEHE_DA_H_
-#define HEHE_DA_H_
+/*
+ * Define before including to enable features:
+ * HEHE_GIVE_ALL   - Include everything
+ * HEHE_GIVE_DA    - Include dynamic array
+ * HEHE_GIVE_BITS  - Include bit manipulation
+ * HEHE_GIVE_QUEUE - Include queue
+ */
+
+// TODO 
+// SOME POTENTIAL OVERFLOW CHECKS FOR CAPACITY IN DA.
+// ADD STRING BUILDER!
+
+#ifndef HEHE_H_
+#define HEHE_H_
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+
+#if !defined(HEHE_GIVE_DA) && !defined(HEHE_GIVE_QUEUE) && !defined(HEHE_GIVE_BITS)
+#ifndef HEHE_GIVE_ALL
+#define HEHE_GIVE_ALL
+#endif /*HEHE_GIVE_ALL*/
+#endif /*!defined(HEHE_GIVE_DA) && !defined(HEHE_GIVE_QUEUE) && !defined(HEHE_GIVE_BITS)*/
 
 #ifndef HEHE_DA_INIT_CAP
 #define HEHE_DA_INIT_CAP 256
@@ -50,8 +68,6 @@
 #if HEHE_DA_INIT_CAP <= 0
 #error "HEHE_DA_INIT_CAP must be positive"
 #endif
-
-#define hehe_perma_assert(exp) do { if(!(exp)) { fprintf(stderr, "[HEHE_DS] Assertion failed: %s, file %s, line %d\n", #exp, __FILE__, __LINE__); abort() ;} ;} while (0)
 
 // You can override these with your own implementations before including this header.
 #ifndef HEHE_DA_ASSERT
@@ -71,13 +87,10 @@
 #define HEHE_DA_MALLOC malloc
 #endif /* HEHE_DA_MALLOC */
 
-// TODO 
-// SOME POTENTIAL OVERFLOW CHECKS FOR CAPACITY IN DA.
-// ADD COMMON BITWISE OPERATION MACROS.
-// ADD TOGGLING WHAT YOU WANT TO INCLUDE #ifdef HEHE_DYNAMIC_ARRAY...
-// ADD STRING BUILDER, WILL BE COOL FOR BIT PRINTING!
+#define hehe_perma_assert(exp) do { if(!(exp)) { fprintf(stderr, "[HEHE_DS] Assertion failed: %s, file %s, line %d\n", #exp, __FILE__, __LINE__); abort() ;} ;} while (0)
 
-// DYNAMIC ARRAY
+// [DYNAMIC ARRAY]
+#if defined(HEHE_GIVE_ALL) || defined(HEHE_GIVE_DA)
 #define hehe_da_grow(hda, needs)                                                \
      do {                                                                       \
          void* tmp = NULL;                                                      \
@@ -142,8 +155,10 @@
             (hda)->capacity = (cap);           \
         }                                      \
     } while (0)                                
+#endif /*defined(HEHE_GIVE_ALL) || defined(HEHE_GIVE_DA)*/
 
-// QUEUE / CIRCULAR BUFFER
+// [QUEUE / CIRCULAR BUFFER]
+#if defined(HEHE_GIVE_ALL) || defined(HEHE_GIVE_QUEUE)
 #define hehe_que_mem_init(que, cap)                                         \
     do {                                                                    \
         (que)->items = HEHE_DA_MALLOC(sizeof(*(que)->items) * (cap));       \
@@ -187,9 +202,16 @@
 #define hehe_que_is_full(que)  ((que)->count == (que)->capacity)
 #define hehe_que_is_empty(que) ((que)->count == 0)
 #define hehe_que_size(que)     ((que)->count)
+#endif/*defined(HEHE_GIVE_ALL) || defined(HEHE_GIVE_QUEUE)*/
 
-// HEHE_BITS
+// [HEHE_BITS]
 // BIG SHOUTOUT [https://www.andreinc.net/2023/02/01/demystifying-bitwise-ops]
+#if defined(HEHE_GIVE_ALL) || defined(HEHE_GIVE_BITS)
+
+#define hehe_bits_set_nth(num, nbit) do {(num) |= (1 << (nbit));} while (0)
+#define hehe_bits_toggle_nth(num, nbit) do {(num) ^= (1 << (nbit));} while (0)
+#define hehe_bits_clear_nth(num, nbit) do {(num) &= ~(1 << (nbit));} while (0)
+#define hehe_bits_check_nth(num, nbit) (((num) >> (nbit)) & 1)
 
 #define hehe_bits_print_uint8_t(num, out)            \
     do {                                             \
@@ -218,9 +240,6 @@
             fprintf((out),"%d", (((num) >> i) & 1)); \
         }                                            \
     } while (0) 
+#endif/*defined(HEHE_GIVE_ALL) || defined(HEHE_GIVE_BITS)*/
 
-
-
-
-
-#endif /* HEHE_DA_H_ */
+#endif /* HEHE_H_ */

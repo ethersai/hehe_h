@@ -34,13 +34,6 @@ void que_print_info(HeheQueue* qu)
     printf("[CAP: %zu]\n", qu->capacity);
 }
 
-// Any non-zero number to the power of 0 is 1.
-#define hehe_wisebit_set(value, n) do { } while (0)
-#define hehe_wisebit_toggle(value, n) do { } while (0) 
-#define hehe_wisebit_clear(value, n) do { } while (0)
-#define hehe_wisebit_read(value, n) do { } while (0)
-
-
 int main(void)
 {   
     HeheQueue que = {0};
@@ -76,9 +69,16 @@ int main(void)
 
     putchar('\n');
 
-
+    unsigned int f = 0;
     
-
+    hehe_bits_print_uint32_t(f, stdout);
+    hehe_bits_toggle_nth(f, 0);
+    
+    hehe_bits_toggle_nth(f, 0);
+    hehe_bits_toggle_nth(f, 0);
+    hehe_bits_clear_nth(f, 0);
+    printf("\n");
+    hehe_bits_print_uint32_t(f, stdout);
 
 #if 0
     HeheDynamicArray da = {0}; 
