@@ -3,6 +3,8 @@
 #include <stdint.h>
 
 #include "hehe.h"
+#define HEHE_TIME_IMPLEMENTATION
+#include "hehe_time.h"
 
 typedef struct {
     int*    items;
@@ -55,8 +57,16 @@ free(str);
 sb_free(sb);
 #endif
 
-int main(void)
+int main(int argc, char* argv[])
 {   
+    
+    char buffer[64];
+    hehe_timestamp_iso(buffer, sizeof(buffer)); 
+    printf("%s\n", buffer);
+    hehe_timestamp_brief(buffer, sizeof(buffer));
+    printf("%s\n", buffer);
+
+#if 0 
     HeheQueue que = {0};
     hehe_que_mem_init(&que, 10);
 
@@ -100,7 +110,7 @@ int main(void)
     hehe_bits_clear_nth(f, 0);
     printf("\n");
     hehe_bits_print_uint32_t(f, stdout);
-
+#endif
 #if 0
     HeheDynamicArray da = {0}; 
    
@@ -149,6 +159,5 @@ int main(void)
     hehe_da_free(&da);
     da_print_info(&da);
 #endif
-
     return 0;
 }
