@@ -29,6 +29,7 @@
 // ADD LOG TO FILE.
 
 #include <time.h>
+#include <stdlib.h>
 #include <stdint.h>
 
 #ifdef _WIN32
@@ -50,6 +51,9 @@ HEHEDEF uint64_t hehe_time_get_ns(void);
 // IMPLEMENTATION PART
 #ifdef HEHE_TIME_IMPLEMENTATION
 
+#define hehe_perma_assert(exp) do { if(!(exp)) { fprintf(stderr, "[HEHe_TIME] Assertion failed: %s, file %s, line %d\n", #exp, __FILE__, __LINE__); abort() ;} } while (0)
+
+// NOTE: Timestamps not thread safe. TODO: Implement localtime_s, localtime_r for thread safety.
 HEHEDEF void hehe_timestamp_iso(char* buffer, size_t size)
 {
     time_t now = time(NULL);
@@ -64,13 +68,27 @@ HEHEDEF void hehe_timestamp_brief(char* buffer, size_t size)
     strftime(buffer, size, "%Y%m%d_%H%M%S", t);
 }
 
+#if defined(_WIN32) && defined(_MSC_VER)
+static inline long long internal_hehe_win_get_freq(void)
+{
+    static long long freq = 0;
+    if (!freq) {
+        LARGE_INTEGER li;
+        if (!QueryPerformanceFrequency(&li))
+            return 0;
+        freq = li.QuadPart;
+    }
+    return freq;
+}
+#endif
+
 HEHEDEF uint64_t hehe_time_get_sec(void)
 {
-#if defined(_WIN32)
-    LARGE_INTEGER frequency, ticks;
-    QueryPerformanceFrequency(&frequency);  // Get ticks per second
+#if defined(_WIN32) && defined(_MSC_VER)
+    long long freq = internal_hehe_win_get_freq(); 
+    LARGE_INTEGER ticks;
     QueryPerformanceCounter(&ticks);        // Get current tick count
-    return (uint64_t)ticks.QuadPart / frequency.QuadPart;
+    return ticks.QuadPart / freq;
 #else
     struct timespec tp;
     clock_gettime(CLOCK_MONOTONIC, &tp);
@@ -80,11 +98,12 @@ HEHEDEF uint64_t hehe_time_get_sec(void)
 
 HEHEDEF uint64_t hehe_time_get_ms(void)
 {
-#if defined(_WIN32)
-    LARGE_INTEGER frequency, ticks;
-    QueryPerformanceFrequency(&frequency);  // Get ticks per second
+
+#if defined(_WIN32) && defined(_MSC_VER)
+    long long freq = internal_hehe_win_get_freq(); 
+    LARGE_INTEGER ticks;
     QueryPerformanceCounter(&ticks);        // Get current tick count
-    return (uint64_t)ticks.QuadPart * 1000ULL / frequency.QuadPart;
+    return (ticks.QuadPart * 1000ULL) / freq;
 #else
     struct timespec tp;
     clock_gettime(CLOCK_MONOTONIC, &tp);
@@ -94,11 +113,11 @@ HEHEDEF uint64_t hehe_time_get_ms(void)
 
 HEHEDEF uint64_t hehe_time_get_ns(void) 
 {
-#if defined(_WIN32)
-    LARGE_INTEGER frequency, ticks;
-    QueryPerformanceFrequency(&frequency);  // Get ticks per second
+#if defined(_WIN32) && defined(_MSC_VER)
+    long long freq = internal_hehe_win_get_freq(); 
+    LARGE_INTEGER ticks;
     QueryPerformanceCounter(&ticks);        // Get current tick count
-    return (uint64_t)ticks.QuadPart * 1000000000ULL / frequency.QuadPart;
+    return (ticks.QuadPart * 1000000000ULL) / freq;
 #else
     struct timespec tp;
     clock_gettime(CLOCK_MONOTONIC, &tp);
