@@ -1,3 +1,4 @@
+#define HEHE_TIME_IMPLEMENTATION
 #include "hehe_time.h"
 
 int main(void)
@@ -7,7 +8,14 @@ int main(void)
     printf("%s\n", buffer);
     hehe_timestamp_brief(buffer, sizeof(buffer));
     printf("%s\n", buffer);
+   
     
+    uint64_t x = hehe_time_get_ms();
+    uint64_t y = hehe_time_get_ns();
+    uint64_t z = hehe_time_get_sec();
+
+    HEHE_LOG_INFO("%llu, %llu, %llu", x, y, z);
+
     // siema windows!
 
     return 0;

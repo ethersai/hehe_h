@@ -4,6 +4,19 @@
  * publish, and distribute this file as you see fit.
  */
 
+/*
+ * USAGE:
+ *   #define HEHEDEF static inline  // optional
+ *   #define HEHE_TIME_IMPLEMENTATION
+ *   #include "hehe_time.h"
+ *
+ *   char buf[64];
+ *   hehe_timestamp_iso(buf, sizeof(buf));
+ *   printf("Time: %s\n", buf);
+ *
+ *   uint64_t ms = hehe_time_get_ms();
+ */
+
 #ifndef HEHe_TIME_H_
 #define HEHe_TIME_H_
 
@@ -30,7 +43,8 @@ static void hehe_log_test(void)
 #include <stdint.h>
 
 #ifdef _WIN32
-//#include <Windows.h>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #endif
 
 // eg #define HEHEDEF static inline
@@ -44,9 +58,8 @@ HEHEDEF uint64_t hehe_time_get_sec(void);
 HEHEDEF uint64_t hehe_time_get_ms(void);
 HEHEDEF uint64_t hehe_time_get_ns(void);
 
-#if 1
-#define HEHE_TIME_IMPLEMENTATION
-#endif
+
+
 #ifdef HEHE_TIME_IMPLEMENTATION
 
 HEHEDEF void hehe_timestamp_iso(char* buffer, size_t size)
@@ -65,23 +78,44 @@ HEHEDEF void hehe_timestamp_brief(char* buffer, size_t size)
 
 HEHEDEF uint64_t hehe_time_get_sec(void)
 {
+#if defined(_WIN32)
+    LARGE_INTEGER frequency, ticks;
+    QueryPerformanceFrequency(&frequency);  // Get ticks per second
+    QueryPerformanceCounter(&ticks);        // Get current tick count
+    return (uint64_t)ticks.QuadPart / frequency.QuadPart;
+#else
     struct timespec tp;
     clock_gettime(CLOCK_MONOTONIC, &tp);
     return (uint64_t)tp.tv_sec + tp.tv_nsec / 1000000000ULL;   
+#endif
 }
 
 HEHEDEF uint64_t hehe_time_get_ms(void)
 {
+#if defined(_WIN32)
+    LARGE_INTEGER frequency, ticks;
+    QueryPerformanceFrequency(&frequency);  // Get ticks per second
+    QueryPerformanceCounter(&ticks);        // Get current tick count
+    return (uint64_t)ticks.QuadPart * 1000ULL / frequency.QuadPart;
+#else
     struct timespec tp;
     clock_gettime(CLOCK_MONOTONIC, &tp);
     return (uint64_t)tp.tv_sec * 1000ULL + tp.tv_nsec / 1000000ULL;
+#endif
 }
 
 HEHEDEF uint64_t hehe_time_get_ns(void) 
 {
+#if defined(_WIN32)
+    LARGE_INTEGER frequency, ticks;
+    QueryPerformanceFrequency(&frequency);  // Get ticks per second
+    QueryPerformanceCounter(&ticks);        // Get current tick count
+    return (uint64_t)ticks.QuadPart * 1000000000ULL / frequency.QuadPart;
+#else
     struct timespec tp;
     clock_gettime(CLOCK_MONOTONIC, &tp);
     return (uint64_t)tp.tv_sec * 1000000000ULL + tp.tv_nsec;
+#endif
 }
 
 #endif /*HEHE_TIME_IMPLEMENTATION*/
