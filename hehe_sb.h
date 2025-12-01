@@ -20,9 +20,24 @@
 // free(str);
 // sb_free(sb);
 
-typedef struct {
+#include <stddef.h>
+#include <string.h>
 
-}; 
+typedef struct {
+    char* items;
+    size_t count;
+    size_t capacity;
+} HEHeSB; 
+
+#define hehe_sb_append(sb, str) \
+    do {                        \
+        strlen()                         \
+    } while (0)                 
+
+
+// hehe_sb_free();
+// hehe_sb_append();
+// hehe_sb_appendf();
 
 
 
